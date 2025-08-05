@@ -25,14 +25,14 @@ export async function POST(req: Request) {
       password: hashedPassword,
     });
     const token = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET!, {
-      expiresIn: "7d",
+      expiresIn: "5m",
     });
 
     const serialized = serialize("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
-      maxAge: 60 * 60 * 24 * 7,
+      maxAge: 5 * 60,
       path: "/",
     });
 

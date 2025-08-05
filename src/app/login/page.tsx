@@ -3,7 +3,6 @@
 import Button from "@/components/Button";
 import Header from "@/components/Header";
 import InputField from "@/components/InputField";
-import Form from "next/form";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -26,7 +25,7 @@ export default function Signin() {
       const data = await res.json();
 
       if (!res.ok) {
-        setMessage(data.message);
+        setMessage(data.message || "Login Failed.");
         return;
       }
       router.push("/");
@@ -36,8 +35,7 @@ export default function Signin() {
     }
   }
   return (
-    <Form
-      action=""
+    <form
       className="flex flex-col gap-10 items-center justify-center bg-white min-h-screen text-black"
       onSubmit={handleSubmit}
     >
@@ -65,6 +63,6 @@ export default function Signin() {
       <Button type="submit">Sign in</Button>
 
       {message && <p className="text-red-500">{message}</p>}
-    </Form>
+    </form>
   );
 }

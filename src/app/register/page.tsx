@@ -58,15 +58,15 @@ export default function Signup() {
             placeholder="email"
             onChange={(e) => setEmail(e.target.value)}
           ></InputField>
-        </div>
-        <div>
-          <label htmlFor="">password:</label>
-          <br />
-          <InputField
-            type="password"
-            placeholder="password"
-            onChange={(e) => setPassword(e.target.value)}
-          ></InputField>
+          <div>
+            <label htmlFor="">password:</label>
+            <br />
+            <InputField
+              type="password"
+              placeholder="password"
+              onChange={(e) => setPassword(e.target.value)}
+            ></InputField>
+          </div>
         </div>
       </div>
       <Button type="submit">Sign up</Button>

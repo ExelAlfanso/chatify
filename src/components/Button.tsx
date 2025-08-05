@@ -20,7 +20,7 @@ const Button: React.FC<ButtonProps> = ({
       type={type}
       id={id}
       onClick={onClick}
-      className={`cursor-pointer hover:bg-slate-50 font-semibold rounded-full px-4 py-2 ${className}`}
+      className={`cursor-pointer border-black border hover:bg-slate-50 font-semibold rounded-full px-4 py-2 ${className} text-black`}
     >
       {children}
     </button>

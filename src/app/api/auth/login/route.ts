@@ -29,21 +29,28 @@ export async function POST(req: Request) {
     }
 
     const token = jwt.sign({ userId: user._id }, JWT_SECRET, {
-      expiresIn: "7d",
+      expiresIn: "5m",
     });
 
     const serialized = serialize("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
-      maxAge: 60 * 60 * 24 * 7,
+      maxAge: 5 * 60,
       path: "/",
     });
 
-    const response = NextResponse.json({ message: "Login successful!" });
+    const response = NextResponse.json(
+      { message: "Login successful!" },
+      { status: 200 }
+    );
     response.headers.set("Set-Cookie", serialized);
     return response;
   } catch (err) {
-    NextResponse.json({ message: err }, { status: 400 });
+    console.error(err);
+    return NextResponse.json(
+      { message: "Something went wrong" },
+      { status: 500 }
+    );
   }
 }
