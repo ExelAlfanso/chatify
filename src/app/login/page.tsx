@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import InputField from "@/components/InputField";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import axiosInstance from "@/lib/axios";
 
 export default function Signin() {
   const router = useRouter();
@@ -15,19 +16,10 @@ export default function Signin() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
+      const res = await axiosInstance.post("login", {
+        email,
+        password,
       });
-      const data = await res.json();
-
-      if (!res.ok) {
-        setMessage(data.message || "Login Failed.");
-        return;
-      }
       router.push("/");
     } catch (err) {
       console.error(err);

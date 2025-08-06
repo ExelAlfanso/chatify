@@ -11,9 +11,9 @@ export default function Home() {
   useEffect(() => {
     const checkLogin = async () => {
       try {
-        const res = await axiosInstance.get("auth/me");
+        const res = await axiosInstance.get("me");
         setUser(res.data.user);
-      } catch (err) {
+      } catch {
         console.log("User is not logged in.");
       }
     };
@@ -23,6 +23,7 @@ export default function Home() {
   useEffect(() => {
     console.log(user);
   }, [user]);
+
   return (
     <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 bg-white">
       {user !== null && (
@@ -33,11 +34,16 @@ export default function Home() {
           <LogoutButton></LogoutButton>
         </div>
       )}
-      {user === null && (
-        <Link href="/login">
-          <Button type="button">Login</Button>
+      <div>
+        {user === null && (
+          <Link href="/login">
+            <Button type="button">Login</Button>
+          </Link>
+        )}
+        <Link href="/register">
+          <Button type={"button"}>Register</Button>
         </Link>
-      )}
+      </div>
     </div>
   );
 }

@@ -3,7 +3,7 @@
 import Button from "@/components/Button";
 import Header from "@/components/Header";
 import InputField from "@/components/InputField";
-import Form from "next/form";
+import axiosInstance from "@/lib/axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -18,26 +18,22 @@ export default function Signup() {
     e.preventDefault();
     setMessage("");
 
-    const res = await fetch("/api/auth/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ username, email, password }),
-    });
-
-    const data = await res.json();
-    if (!res.ok) {
-      setMessage(data.message);
-      return;
+    try {
+      const res = await axiosInstance.post("register", {
+        username,
+        email,
+        password,
+      });
+      router.push("/");
+    } catch (err) {
+      console.error(err);
+      setMessage("Something went wrong");
     }
-    router.push("/");
   }
   return (
-    <Form
+    <form
       onSubmit={handleSubmit}
       className="flex flex-col gap-10 items-center justify-center bg-white min-h-screen text-black"
-      action={""}
     >
       <Header className="font-bold">Sign up.</Header>
       <div className="flex flex-col gap-10">
@@ -71,6 +67,6 @@ export default function Signup() {
       </div>
       <Button type="submit">Sign up</Button>
       {message && <p className="text-red-500">{message}</p>}
-    </Form>
+    </form>
   );
 }
