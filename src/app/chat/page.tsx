@@ -3,7 +3,7 @@
 import axiosInstance from "@/lib/axios";
 import { useRouter } from "next/navigation";
 import socket from "@/lib/socket";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Message from "@/components/Message";
 
 interface MessageData {
@@ -23,9 +23,8 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ id, className, children }) => {
   const [messages, setMessages] = useState<MessageData[]>([]);
   const [isConnected, setIsConnected] = useState(false);
   const [transport, setTransport] = useState("N/A");
-
   const router = useRouter();
-
+  const bottomRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const checkLogin = async () => {
       try {
@@ -98,6 +97,9 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ id, className, children }) => {
     setInput("");
   };
 
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  });
   return (
     <div id={id} className={`min-h-screen text-black bg-white ${className}`}>
       <p>Status: {isConnected ? "connected" : "disconnected"}</p>
@@ -110,6 +112,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ id, className, children }) => {
             </Message>
           );
         })}
+        <div ref={bottomRef} />
       </div>
       <input
         className="border border-black px-2 py-1 mt-2 w-full"
