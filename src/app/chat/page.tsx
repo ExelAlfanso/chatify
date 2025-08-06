@@ -4,6 +4,12 @@ import axiosInstance from "@/lib/axios";
 import { useRouter } from "next/navigation";
 import socket from "@/lib/socket";
 import { useEffect, useState } from "react";
+import Message from "@/components/Message";
+
+interface MessageData {
+  senderUsername: string;
+  content: string;
+}
 
 interface ChatRoomProps {
   id: string;
@@ -14,7 +20,7 @@ interface ChatRoomProps {
 const ChatRoom: React.FC<ChatRoomProps> = ({ id, className, children }) => {
   const [user, setUser] = useState<string | null>(null);
   const [input, setInput] = useState("");
-  const [messages, setMessages] = useState<string[]>([]);
+  const [messages, setMessages] = useState<MessageData[]>([]);
   const [isConnected, setIsConnected] = useState(false);
   const [transport, setTransport] = useState("N/A");
 
@@ -25,11 +31,22 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ id, className, children }) => {
       try {
         const res = await axiosInstance.get("me");
         setUser(res.data.user);
-      } catch (err) {
+        console.log(res.data.user);
+      } catch {
         router.push("/");
       }
     };
+    const loadMessages = async () => {
+      try {
+        const res = await axiosInstance.get("/messages");
+        setMessages(res.data.messages);
+        console.log(res.data.messages);
+      } catch {
+        console.error("Failed to load messages.");
+      }
+    };
     checkLogin();
+    loadMessages();
   }, [router]);
 
   useEffect(() => {
@@ -48,7 +65,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ id, className, children }) => {
       setTransport("N/A");
     };
 
-    const onMessage = (msg: string) => {
+    const onMessage = (msg: MessageData) => {
       console.log("Socket received message:", msg);
       setMessages((prev) => [...prev, msg]);
     };
@@ -73,22 +90,29 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ id, className, children }) => {
   }, []);
   const sendMessage = () => {
     if (!input.trim()) return;
-    console.log("Sending message:", input);
-    socket.emit("message", input);
+    const messagePayload = {
+      senderUsername: user,
+      content: input,
+    };
+    socket.emit("message", messagePayload);
     setInput("");
   };
 
   return (
-    <div id={id} className={`${className}`}>
+    <div id={id} className={`min-h-screen text-black bg-white ${className}`}>
       <p>Status: {isConnected ? "connected" : "disconnected"}</p>
       <p>Transport: {transport}</p>
       <div className="border p-4 h-64 overflow-y-scroll">
-        {messages.map((msg, idx) => (
-          <p key={idx}>{msg}</p>
-        ))}
+        {messages.map((msg, idx) => {
+          return (
+            <Message key={idx} username={msg.senderUsername}>
+              {msg.content}
+            </Message>
+          );
+        })}
       </div>
       <input
-        className="border px-2 py-1 mt-2 w-full"
+        className="border border-black px-2 py-1 mt-2 w-full"
         value={input}
         onChange={(e) => setInput(e.target.value)}
         onKeyDown={(e) => e.key === "Enter" && sendMessage()}

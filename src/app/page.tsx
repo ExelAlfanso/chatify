@@ -6,12 +6,17 @@ import axiosInstance from "@/lib/axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+interface User {
+  username: string;
+  email: string;
+}
+
 export default function Home() {
-  const [user, setUser] = useState<string | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   useEffect(() => {
     const checkLogin = async () => {
       try {
-        const res = await axiosInstance.get("me");
+        const res = await axiosInstance.get("/me");
         setUser(res.data.user);
       } catch {
         console.log("User is not logged in.");
