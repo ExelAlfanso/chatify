@@ -17,7 +17,7 @@ interface ChatRoomProps {
   children?: React.ReactNode;
 }
 
-const ChatRoom: React.FC<ChatRoomProps> = ({ id, className, children }) => {
+const ChatRoom: React.FC<ChatRoomProps> = ({ id, className }) => {
   const [user, setUser] = useState<string | null>(null);
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<MessageData[]>([]);
@@ -37,16 +37,17 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ id, className, children }) => {
     };
     const loadMessages = async () => {
       try {
-        const res = await axiosInstance.get("/messages");
+        const res = await axiosInstance.get("/messages", {
+          params: { roomID: id },
+        });
         setMessages(res.data.messages);
-        console.log(res.data.messages);
       } catch {
         console.error("Failed to load messages.");
       }
     };
     checkLogin();
     loadMessages();
-  }, [router]);
+  }, [id, router]);
 
   useEffect(() => {
     const onUpgrade = (transport: { name: string }) => {
@@ -57,6 +58,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ id, className, children }) => {
       setIsConnected(true);
       setTransport(socket.io.engine.transport.name);
       socket.io.engine.on("upgrade", onUpgrade);
+      socket.emit("join-room", id);
     };
     const onDisconnect = () => {
       console.log("Disconnected from socket");
@@ -86,10 +88,11 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ id, className, children }) => {
       socket.io.engine.off("upgrade", onUpgrade);
       socket.offAny();
     };
-  }, []);
+  }, [id]);
   const sendMessage = () => {
     if (!input.trim()) return;
     const messagePayload = {
+      roomID: id,
       senderUsername: user,
       content: input,
     };

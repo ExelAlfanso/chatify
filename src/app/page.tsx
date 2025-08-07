@@ -1,6 +1,7 @@
 "use client";
 
 import Button from "@/components/Button";
+import ChatRoomList from "@/components/ChatRoomList";
 import LogoutButton from "@/components/LogoutButton";
 import axiosInstance from "@/lib/axios";
 import Link from "next/link";
@@ -33,9 +34,7 @@ export default function Home() {
     <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 bg-white">
       {user !== null && (
         <div>
-          <Link href="/chat">
-            <Button type={"button"}>Enter Chat Room</Button>
-          </Link>
+          <ChatRoomList></ChatRoomList>
           <LogoutButton></LogoutButton>
         </div>
       )}
