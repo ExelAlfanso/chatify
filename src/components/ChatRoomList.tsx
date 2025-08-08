@@ -34,7 +34,7 @@ const ChatRoomList: React.FC<ChatRoomListProps> = ({
     fetchRooms();
   }, []);
   return (
-    <div id={id} className={`${className}`}>
+    <div id={id} className={`grid grid-cols-3 ${className}`}>
       {rooms.map((room, idx) => (
         <Link href={`/chat/${room.roomID}`} key={idx}>
           <Button type={"button"}>Enter {room.name} chat room</Button>

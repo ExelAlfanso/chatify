@@ -16,9 +16,9 @@ const Message: React.FC<MessageProps> = ({
   return (
     <div
       id={id}
-      className={`flex flex-col text-black border border-black p-2 ${className}`}
+      className={`flex flex-col text-black border border-black p-2 mb-2 w-1/2 ${className}`}
     >
-      <div>{username}</div>
+      <div className="font-semibold">{username}</div>
       <div>{children}</div>
     </div>
   );

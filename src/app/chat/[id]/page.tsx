@@ -9,5 +9,9 @@ interface ChatPageProps {
 export default function ChatPage(props: ChatPageProps) {
   const { id } = use(props.params);
   if (!id) notFound();
-  return <ValidatedChatRoom id={id} />;
+  return (
+    <div className="min-h-screen bg-white flex items-center justify-center">
+      <ValidatedChatRoom id={id} />
+    </div>
+  );
 }

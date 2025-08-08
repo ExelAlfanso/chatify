@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import socket from "@/lib/socket";
 import { useEffect, useRef, useState } from "react";
 import Message from "@/components/Message";
-
+import { MoveLeft } from "lucide-react";
 interface MessageData {
   senderUsername: string;
   content: string;
@@ -104,9 +104,19 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ id, className }) => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   });
   return (
-    <div id={id} className={`min-h-screen text-black bg-white ${className}`}>
-      <p>Status: {isConnected ? "connected" : "disconnected"}</p>
-      <p>Transport: {transport}</p>
+    <div id={id} className={`w-1/2 text-black ${className}`}>
+      <h1 className="text-center text-6xl font-bold p-10">
+        {id} chat room{" "}
+        <span
+          className={`inline ${
+            isConnected ? "text-green-500" : "text-red-500"
+          }`}
+        >
+          .
+        </span>
+      </h1>
+      {/* <p>Status: {isConnected ? "connected" : "disconnected"}</p>
+      <p>Transport: {transport}</p> */}
       <div className="border p-4 h-64 overflow-y-scroll">
         {messages.map((msg, idx) => {
           return (
@@ -117,18 +127,20 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ id, className }) => {
         })}
         <div ref={bottomRef} />
       </div>
-      <input
-        className="border border-black px-2 py-1 mt-2 w-full"
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-      />
-      <button
-        className="mt-2 px-4 py-2 bg-blue-500 text-white cursor-pointer hover:bg-blue-400"
-        onClick={sendMessage}
-      >
-        Send
-      </button>
+      <div className="flex flex-row gap-1">
+        <input
+          className=" px-2 py-1 mt-2 w-full border border-black"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+        />
+        <button
+          className="mt-2 px-4 py-2 bg-white text-black cursor-pointer hover:bg-slate-50 font-semibold  border border-black"
+          onClick={sendMessage}
+        >
+          <MoveLeft></MoveLeft>
+        </button>
+      </div>
     </div>
   );
 };
