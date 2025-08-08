@@ -1,8 +1,6 @@
 "use client";
 
 import React from "react";
-import ChatRoomList from "@/components/ChatRoomList";
-import { useAuth } from "@/context/AuthContext";
 import Hero from "@/sections/Hero";
 import Navbar from "@/components/Navbar";
 
