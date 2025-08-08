@@ -8,7 +8,6 @@ interface HeroProps {
 }
 
 const Hero: React.FC<HeroProps> = ({ id, className, children }) => {
-  const [rooms, setRooms] = useState([]);
   return (
     <div
       id={id}

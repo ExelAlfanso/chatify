@@ -1,22 +1,5 @@
-"use client";
+import Home from "@/components/Home";
 
-import React from "react";
-import Hero from "@/sections/Hero";
-import Navbar from "@/components/Navbar";
-
-interface HomeProps {
-  id: string;
-  className?: string;
-  children?: React.ReactNode;
+export default function HomePage() {
+  return <Home id="Home"></Home>;
 }
-
-const Home: React.FC<HomeProps> = ({ id, className }) => {
-  return (
-    <section id={id} className={`font-sans min-h-screen bg-white ${className}`}>
-      <Navbar id="Navbar" />
-      <Hero id="Hero"></Hero>
-    </section>
-  );
-};
-
-export default Home;
