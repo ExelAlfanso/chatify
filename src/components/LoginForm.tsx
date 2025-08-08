@@ -16,7 +16,7 @@ export default function Signin() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     try {
-      const res = await axiosInstance.post("login", {
+      const res = await axiosInstance.post("/login", {
         email,
         password,
       });

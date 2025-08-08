@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const checkLogin = async () => {
       try {
-        const res = await axiosInstance.get("/me", { withCredentials: true });
+        const res = await axiosInstance.get("/me");
         setUser(res.data.user);
       } catch {
         setUser(null);
