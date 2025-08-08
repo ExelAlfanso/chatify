@@ -1,5 +1,9 @@
-import Home from "@/components/Hero";
+import HomePage from "./home/page";
 
 export default function Page() {
-  return <Home id="Home" />;
+  return (
+    <div className="bg-white">
+      <HomePage />
+    </div>
+  );
 }
