@@ -4,6 +4,8 @@ import axiosInstance from "@/lib/axios";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import Button from "./Button";
+import { useLoading } from "@/context/LoadingContext";
+import LinkButton from "./LinkButton";
 
 interface ChatRoom {
   roomID: string;
@@ -36,9 +38,9 @@ const ChatRoomList: React.FC<ChatRoomListProps> = ({
   return (
     <div id={id} className={`grid grid-cols-3 ${className}`}>
       {rooms.map((room, idx) => (
-        <Link href={`/chat/${room.roomID}`} key={idx}>
+        <LinkButton href={`/chat/${room.roomID}`} key={idx}>
           <Button type={"button"}>Enter {room.name} chat room</Button>
-        </Link>
+        </LinkButton>
       ))}
 
       {children}

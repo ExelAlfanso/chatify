@@ -6,24 +6,27 @@ import InputField from "@/components/InputField";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import axiosInstance from "@/lib/axios";
+import { useLoading } from "@/context/LoadingContext";
 
 export default function Signin() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
-
+  const { showLoading, hideLoading } = useLoading();
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     try {
-      const res = await axiosInstance.post("/login", {
+      showLoading();
+      await axiosInstance.post("/login", {
         email,
         password,
       });
       router.push("/");
-    } catch (err) {
-      console.error(err);
-      setMessage("Something went wrong.");
+    } catch {
+      setMessage("Invalid Credentials.");
+    } finally {
+      hideLoading();
     }
   }
   return (

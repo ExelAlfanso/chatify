@@ -1,11 +1,11 @@
 "use client";
 
-import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
 import React from "react";
 import Button from "./Button";
 import LogoutButton from "./LogoutButton";
 import { NavBarDatas } from "@/datas/NavbarDatas";
+import { useAuth } from "@/context/AuthContext";
 
 interface NavbarProps {
   id: string;

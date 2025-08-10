@@ -6,6 +6,7 @@ import socket from "@/lib/socket";
 import { useEffect, useRef, useState } from "react";
 import Message from "@/components/Message";
 import { MoveLeft } from "lucide-react";
+import { useLoading } from "@/context/LoadingContext";
 interface MessageData {
   senderUsername: string;
   content: string;
@@ -28,7 +29,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ id, className }) => {
   useEffect(() => {
     const checkLogin = async () => {
       try {
-        const res = await axiosInstance.get("me");
+        const res = await axiosInstance.get("/me");
         setUser(res.data.user);
         console.log(res.data.user);
       } catch {

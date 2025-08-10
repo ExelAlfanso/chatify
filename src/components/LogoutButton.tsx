@@ -5,6 +5,7 @@ import Button from "./Button";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import axiosInstance from "@/lib/axios";
+import { useLoading } from "@/context/LoadingContext";
 
 interface LogoutButtonProps {
   id?: string;
@@ -18,9 +19,14 @@ const LogoutButton: React.FC<LogoutButtonProps> = ({
   children,
 }) => {
   const router = useRouter();
-
+  const { showLoading } = useLoading();
   async function handleLogout() {
-    await axiosInstance.post("/logout");
+    try {
+      showLoading();
+      await axiosInstance.post("/logout");
+    } catch (err) {
+      console.error(err);
+    }
     router.push("/login");
   }
   return (
