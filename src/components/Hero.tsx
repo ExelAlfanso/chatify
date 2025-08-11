@@ -1,5 +1,5 @@
 import ChatRoomList from "@/components/ChatRoomList";
-import React, { useState } from "react";
+import React from "react";
 
 interface HeroProps {
   id: string;

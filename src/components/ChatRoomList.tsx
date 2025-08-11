@@ -1,11 +1,10 @@
 "use client";
 
 import axiosInstance from "@/lib/axios";
-import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import Button from "./Button";
-import { useLoading } from "@/context/LoadingContext";
 import LinkButton from "./LinkButton";
+import { useAuth } from "@/context/AuthContext";
 
 interface ChatRoom {
   roomID: string;
@@ -23,6 +22,7 @@ const ChatRoomList: React.FC<ChatRoomListProps> = ({
   className,
   children,
 }) => {
+  const { user } = useAuth();
   const [rooms, setRooms] = useState<ChatRoom[]>([]);
   useEffect(() => {
     const fetchRooms = async () => {
@@ -35,10 +35,14 @@ const ChatRoomList: React.FC<ChatRoomListProps> = ({
     };
     fetchRooms();
   }, []);
+
   return (
     <div id={id} className={`grid grid-cols-3 ${className}`}>
       {rooms.map((room, idx) => (
-        <LinkButton href={`/chat/${room.roomID}`} key={idx}>
+        <LinkButton
+          href={`${user === null ? `/login` : `/chat/${room.roomID}`}`}
+          key={idx}
+        >
           <Button type={"button"}>Enter {room.name} chat room</Button>
         </LinkButton>
       ))}
