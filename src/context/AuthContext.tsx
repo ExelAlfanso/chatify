@@ -10,13 +10,11 @@ import {
   useContext,
 } from "react";
 import axiosInstance from "@/lib/axios";
+import User from "../models/User.js";
 interface AuthProviderProps {
   children: ReactNode;
 }
-interface User {
-  username: string;
-  email: string;
-}
+
 interface AuthContextType {
   user: User | null;
   loading: boolean;
@@ -37,8 +35,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     await axiosInstance
       .get("/me")
       .then((res) => {
-        console.log("Fetched from /me:", res.data.user);
-        setUser(res.data.user);
+        console.log("Fetched from /me:", res.data);
+        setUser(res.data);
       })
       .catch(() => setUser(null))
       .finally(() => setLoading(false));

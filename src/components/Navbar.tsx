@@ -3,9 +3,9 @@
 import Link from "next/link";
 import React from "react";
 import Button from "./Button";
-import LogoutButton from "./LogoutButton";
 import { NavBarDatas } from "@/datas/NavbarDatas";
 import { useAuth } from "@/context/AuthContext";
+import ProfileDropdown from "./ProfileDropdown";
 
 interface NavbarProps {
   id: string;
@@ -40,7 +40,7 @@ const Navbar: React.FC<NavbarProps> = ({ id, className, children }) => {
           </Link>
         </div>
       )}
-      {user && <LogoutButton></LogoutButton>}
+      {user && <ProfileDropdown id="ProfileDropdown" className="relative" />}
       {children}
     </nav>
   );

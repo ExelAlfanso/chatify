@@ -22,7 +22,7 @@ export default function Signin() {
         email,
         password,
       });
-      router.push("/");
+      router.push("/home");
     } catch {
       setMessage("Invalid Credentials.");
     } finally {

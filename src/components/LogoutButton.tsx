@@ -3,7 +3,6 @@
 import React from "react";
 import Button from "./Button";
 import { useRouter } from "next/navigation";
-import axios from "axios";
 import axiosInstance from "@/lib/axios";
 import { useLoading } from "@/context/LoadingContext";
 
