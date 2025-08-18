@@ -16,7 +16,7 @@ interface ProfileProps {
 }
 
 const Profile: React.FC<ProfileProps> = ({ id, className, children }) => {
-  const { user } = useAuth();
+  const { user, refreshUser } = useAuth();
   const [userId, setUserId] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -31,45 +31,40 @@ const Profile: React.FC<ProfileProps> = ({ id, className, children }) => {
       setUserId(user.id);
     }
   }, [user]);
-  async function handleChange(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     try {
       showLoading();
-
-      let avatarUrl = avatar;
-
       if (avatarFile) {
         const formData = new FormData();
         formData.append("avatar", avatarFile);
         const res = await axiosInstance.put(
-          `/users/${userId}/avatar`,
+          `/users/${user?.id}/uploadAvatar`,
           formData,
           {
             headers: { "Content-Type": "multipart/form-data" },
           }
         );
-        avatarUrl = res.data.avatarUrl;
+        setAvatar(res.data.avatarUrl);
       }
-
-      await axiosInstance.put(`/users/${userId}/update/`, {
+      await axiosInstance.put(`/users/${userId}/update`, {
         id: userId,
         username: username,
         email: email,
-        avatar: avatarUrl,
       });
       console.log("Successfully updated user!");
     } catch (err) {
       console.log(err);
     } finally {
+      refreshUser();
       hideLoading();
     }
   }
-  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file || !user?.id) return;
     const previewUrl = URL.createObjectURL(file);
     setAvatar(previewUrl);
-
     setAvatarFile(file);
   };
   return (
@@ -79,7 +74,7 @@ const Profile: React.FC<ProfileProps> = ({ id, className, children }) => {
     >
       <form
         className="flex flex-col items-center justify-center"
-        onSubmit={handleChange}
+        onSubmit={handleSubmit}
       >
         <div className="relative group flex items-center justify-center border-2 border-black rounded-full w-32 h-32 overflow-hidden">
           {avatar ? (
@@ -89,6 +84,7 @@ const Profile: React.FC<ProfileProps> = ({ id, className, children }) => {
               width={128}
               height={128}
               className="object-cover w-full h-full"
+              priority
             />
           ) : (
             <User size={100} className="p-3 " />
@@ -100,7 +96,7 @@ const Profile: React.FC<ProfileProps> = ({ id, className, children }) => {
               type="file"
               accept="image/*"
               className="hidden"
-              onChange={handleAvatarUpload}
+              onChange={handleChange}
             />
           </label>
         </div>

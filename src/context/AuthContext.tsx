@@ -31,7 +31,7 @@ export const AuthContext = createContext<AuthContextType>({
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const fetchUser = async () =>
+  const fetchUser = async () => {
     await axiosInstance
       .get("/me")
       .then((res) => {
@@ -40,6 +40,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       })
       .catch(() => setUser(null))
       .finally(() => setLoading(false));
+  };
 
   useEffect(() => {
     fetchUser();
