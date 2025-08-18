@@ -8,21 +8,23 @@ import axiosInstance from "@/lib/axios";
 import { useLoading } from "@/context/LoadingContext";
 import { User, Camera } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 interface ProfileProps {
   id?: string;
   className?: string;
-  children?: React.ReactNode;
 }
 
-const Profile: React.FC<ProfileProps> = ({ id, className, children }) => {
+const Profile: React.FC<ProfileProps> = ({ id, className }) => {
   const { user, refreshUser } = useAuth();
   const [userId, setUserId] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [avatar, setAvatar] = useState("");
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const router = useRouter();
   const { showLoading, hideLoading } = useLoading();
+
   useEffect(() => {
     if (user) {
       setUsername(user.username);
@@ -30,7 +32,8 @@ const Profile: React.FC<ProfileProps> = ({ id, className, children }) => {
       setAvatar(user.avatar);
       setUserId(user.id);
     }
-  }, [user]);
+  }, [user, router]);
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     try {

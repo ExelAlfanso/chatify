@@ -24,18 +24,8 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ id, className }) => {
   const [messages, setMessages] = useState<MessageData[]>([]);
   const [isConnected, setIsConnected] = useState(false);
   const [transport, setTransport] = useState("N/A");
-  const router = useRouter();
   const bottomRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    const checkLogin = async () => {
-      try {
-        const res = await axiosInstance.get("/me");
-        setUser(res.data.user);
-        console.log(res.data.user);
-      } catch {
-        router.push("/");
-      }
-    };
     const loadMessages = async () => {
       try {
         const res = await axiosInstance.get("/messages", {
@@ -46,9 +36,8 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ id, className }) => {
         console.error("Failed to load messages.");
       }
     };
-    checkLogin();
     loadMessages();
-  }, [id, router]);
+  }, [id]);
 
   useEffect(() => {
     const onUpgrade = (transport: { name: string }) => {

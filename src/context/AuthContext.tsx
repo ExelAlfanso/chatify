@@ -8,48 +8,40 @@ import {
   type SetStateAction,
   type Dispatch,
   useContext,
+  useCallback,
 } from "react";
 import axiosInstance from "@/lib/axios";
 import User from "../models/User.js";
+import { useLoading } from "./LoadingContext";
+
 interface AuthProviderProps {
   children: ReactNode;
 }
 
 interface AuthContextType {
   user: User | null;
-  loading: boolean;
   setUser: Dispatch<SetStateAction<User | null>>;
   refreshUser: () => Promise<void>;
 }
 export const AuthContext = createContext<AuthContextType>({
   user: null,
-  loading: true,
   setUser: () => {},
   refreshUser: async () => {},
 });
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
-  const fetchUser = async () => {
-    await axiosInstance
-      .get("/me")
-      .then((res) => {
-        console.log("Fetched from /me:", res.data);
-        setUser(res.data);
-      })
-      .catch(() => setUser(null))
-      .finally(() => setLoading(false));
-  };
-
-  useEffect(() => {
-    fetchUser();
+  const fetchUser = useCallback(async () => {
+    try {
+      const res = await axiosInstance.get("/me");
+      setUser(res.data);
+    } catch {
+      setUser(null);
+    }
   }, []);
 
   return (
-    <AuthContext.Provider
-      value={{ user, loading, setUser, refreshUser: fetchUser }}
-    >
+    <AuthContext.Provider value={{ user, setUser, refreshUser: fetchUser }}>
       {children}
     </AuthContext.Provider>
   );

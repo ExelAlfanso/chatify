@@ -20,8 +20,8 @@ export function LoadingProvider({ children }: LoadingProviderProps) {
 
   return (
     <LoadingContext.Provider value={{ showLoading, hideLoading }}>
-      {children}
       {loading && <LoadingOverlay></LoadingOverlay>}
+      {children}
     </LoadingContext.Provider>
   );
 }

@@ -4,8 +4,7 @@ import jwt from "jsonwebtoken";
 const JWT_SECRET = process.env.JWT_SECRET!;
 
 export function middleware(req: NextRequest) {
-  const token = req.cookies.get("token")?.value;
-
+  const token = req.cookies.get("accessToken")?.value;
   if (!token) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
@@ -13,11 +12,11 @@ export function middleware(req: NextRequest) {
   try {
     jwt.verify(token, JWT_SECRET);
     return NextResponse.next();
-  } catch (error) {
+  } catch {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 }
 
 export const config = {
-  matcher: ["/chat", "/chat/:path*"],
+  matcher: ["/profile", "/profile/:path*", "/chat", "/chat/:path*"],
 };

@@ -5,6 +5,7 @@ import { useAuth } from "@/context/AuthContext";
 import axiosInstance from "@/lib/axios";
 import { useRouter } from "next/navigation";
 import { useLoading } from "@/context/LoadingContext";
+import Link from "next/link";
 
 interface ProfileDropdownProps {
   id?: string;
@@ -44,7 +45,7 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({
     try {
       showLoading();
       await axiosInstance.post("/logout");
-      router.push("/home");
+      router.push("/");
     } catch (err) {
       console.error(err);
     } finally {
@@ -74,14 +75,12 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({
       {children}
       {isOpen && (
         <div className="absolute right-0 w-48 mt-2 bg-white rounded shadow">
-          <button
-            className="block w-full px-4 py-2 text-left cursor-pointer hover:bg-gray-100"
-            onClick={() => {
-              router.push("/profile");
-            }}
+          <Link
+            href={"/profile"}
+            className="block w-full px-4 py-2 text-left cursor hover:bg-gray-100"
           >
             Profile
-          </button>
+          </Link>
           <button
             className="block w-full px-4 py-2 text-left cursor-pointer hover:bg-gray-100"
             onClick={handleLogout}
