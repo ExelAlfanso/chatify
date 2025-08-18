@@ -1,5 +1,10 @@
 import Profile from "@/components/Profile";
+import PrivateRoute from "@/wrapper/PrivateRoute";
 
 export default function ProfilePage() {
-  return <Profile></Profile>;
+  return (
+    <PrivateRoute>
+      <Profile></Profile>
+    </PrivateRoute>
+  );
 }

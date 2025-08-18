@@ -13,11 +13,11 @@ interface HomeProps {
 }
 
 const Home: React.FC<HomeProps> = ({ id, className }) => {
-  const { hideLoading } = useLoading();
   const { refreshUser } = useAuth();
+  const { hideLoading } = useLoading();
   useEffect(() => {
-    hideLoading();
     refreshUser();
+    hideLoading();
   }, [hideLoading, refreshUser]);
   return (
     <section id={id} className={`font-sans min-h-screen bg-white ${className}`}>

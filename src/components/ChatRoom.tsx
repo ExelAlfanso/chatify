@@ -1,12 +1,11 @@
 "use client";
 
 import axiosInstance from "@/lib/axios";
-import { useRouter } from "next/navigation";
 import socket from "@/lib/socket";
 import { useEffect, useRef, useState } from "react";
 import Message from "@/components/Message";
 import { MoveLeft } from "lucide-react";
-import { useLoading } from "@/context/LoadingContext";
+import { useAuth } from "@/context/AuthContext";
 interface MessageData {
   senderUsername: string;
   content: string;
@@ -19,7 +18,7 @@ interface ChatRoomProps {
 }
 
 const ChatRoom: React.FC<ChatRoomProps> = ({ id, className }) => {
-  const [user, setUser] = useState<string | null>(null);
+  const { user } = useAuth();
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<MessageData[]>([]);
   const [isConnected, setIsConnected] = useState(false);
@@ -83,7 +82,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ id, className }) => {
     if (!input.trim()) return;
     const messagePayload = {
       roomID: id,
-      senderUsername: user,
+      senderUsername: user?.username,
       content: input,
     };
     socket.emit("message", messagePayload);

@@ -4,29 +4,19 @@ import Button from "@/components/Button";
 import Header from "@/components/Header";
 import InputField from "@/components/InputField";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-import axiosInstance from "@/lib/axios";
-import { useLoading } from "@/context/LoadingContext";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Signin() {
-  const router = useRouter();
+  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
-  const { showLoading, hideLoading } = useLoading();
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     try {
-      showLoading();
-      await axiosInstance.post("/login", {
-        email,
-        password,
-      });
-      router.push("/home");
+      await login(email, password);
     } catch {
       setMessage("Invalid Credentials.");
-    } finally {
-      hideLoading();
     }
   }
   return (

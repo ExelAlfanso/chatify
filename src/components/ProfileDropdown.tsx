@@ -2,9 +2,6 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
-import axiosInstance from "@/lib/axios";
-import { useRouter } from "next/navigation";
-import { useLoading } from "@/context/LoadingContext";
 import Link from "next/link";
 
 interface ProfileDropdownProps {
@@ -18,9 +15,7 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({
   className,
   children,
 }) => {
-  const { user } = useAuth();
-  const router = useRouter();
-  const { showLoading, hideLoading } = useLoading();
+  const { user, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -41,15 +36,11 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({
   const handleDropdown = () => {
     setIsOpen((open) => !open);
   };
-  const handleLogout = async () => {
+  const handleLogout = () => {
     try {
-      showLoading();
-      await axiosInstance.post("/logout");
-      router.push("/");
+      logout();
     } catch (err) {
       console.error(err);
-    } finally {
-      hideLoading();
     }
   };
 
