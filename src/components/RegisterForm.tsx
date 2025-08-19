@@ -3,20 +3,16 @@
 import Button from "@/components/Button";
 import Header from "@/components/Header";
 import InputField from "@/components/InputField";
-import { useLoading } from "@/context/LoadingContext";
-import axiosInstance from "@/lib/axios";
-import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 import { useState } from "react";
 
 export default function Signup() {
-  const router = useRouter();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
-  const { showLoading, hideLoading } = useLoading();
-
+  const { register } = useAuth();
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
@@ -30,17 +26,9 @@ export default function Signup() {
       return;
     }
     try {
-      showLoading();
-      await axiosInstance.post("/register", {
-        username,
-        email,
-        password,
-      });
-      router.push("/");
+      await register(username, email, password);
     } catch {
       setError("Account already exists.");
-    } finally {
-      hideLoading();
     }
   }
   return (

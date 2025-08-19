@@ -36,9 +36,9 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({
   const handleDropdown = () => {
     setIsOpen((open) => !open);
   };
-  const handleLogout = () => {
+  const handleLogout = async () => {
     try {
-      logout();
+      await logout();
     } catch (err) {
       console.error(err);
     }

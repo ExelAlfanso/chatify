@@ -12,6 +12,7 @@ import {
 import axiosInstance from "@/lib/axios";
 import User from "../models/User.js";
 import { useRouter } from "next/navigation.js";
+import LoadingOverlay from "@/components/LoadingOverlay";
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -21,8 +22,13 @@ interface AuthContextType {
   user: User | null;
   setUser: Dispatch<SetStateAction<User | null>>;
   login: (email: string, password: string) => Promise<void>;
+  register: (
+    username: string,
+    email: string,
+    password: string
+  ) => Promise<void>;
   loading: boolean;
-  logout: () => void;
+  logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
 }
 export const AuthContext = createContext<AuthContextType | undefined>(
@@ -43,6 +49,26 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       setLoading(false);
     }
   }, []);
+
+  const register = async (
+    username: string,
+    email: string,
+    password: string
+  ) => {
+    try {
+      setLoading(true);
+      await axiosInstance.post("/register", {
+        username,
+        email,
+        password,
+      });
+      router.push("/");
+    } catch (err) {
+      console.error("Registrastion failed.", err);
+    } finally {
+      setLoading(false);
+    }
+  };
   const login = async (email: string, password: string) => {
     try {
       setLoading(true);
@@ -57,15 +83,31 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       setLoading(false);
     }
   };
-  const logout = () => {
-    axiosInstance.post("/logout");
-    setUser(null);
-    router.push("/login");
+  const logout = async () => {
+    try {
+      setLoading(true);
+      await axiosInstance.post("/logout");
+      setUser(null);
+      router.push("/login");
+    } catch (err) {
+      console.error("Logout failed", err);
+    } finally {
+      setLoading(false);
+    }
   };
   return (
     <AuthContext.Provider
-      value={{ user, setUser, login, logout, loading, refreshUser: fetchUser }}
+      value={{
+        user,
+        setUser,
+        login,
+        register,
+        logout,
+        loading,
+        refreshUser: fetchUser,
+      }}
     >
+      {loading && <LoadingOverlay></LoadingOverlay>}
       {children}
     </AuthContext.Provider>
   );
