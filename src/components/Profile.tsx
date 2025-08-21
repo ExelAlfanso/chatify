@@ -9,6 +9,7 @@ import { useLoading } from "@/context/LoadingContext";
 import { User, Camera } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import Header from "./Header";
 
 interface ProfileProps {
   id?: string;
@@ -16,7 +17,7 @@ interface ProfileProps {
 }
 
 const Profile: React.FC<ProfileProps> = ({ id, className }) => {
-  const { user, refreshUser } = useAuth();
+  const { user, setUser, refreshUser } = useAuth();
   const [userId, setUserId] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -32,7 +33,7 @@ const Profile: React.FC<ProfileProps> = ({ id, className }) => {
       setAvatar(user.avatar);
       setUserId(user.id);
     }
-  }, [user, router]);
+  }, [user]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -55,11 +56,11 @@ const Profile: React.FC<ProfileProps> = ({ id, className }) => {
         username: username,
         email: email,
       });
+      setUser((prev) => (prev ? { ...prev, username, email, avatar } : prev));
       console.log("Successfully updated user!");
     } catch (err) {
       console.log(err);
     } finally {
-      refreshUser();
       hideLoading();
     }
   }
@@ -76,9 +77,10 @@ const Profile: React.FC<ProfileProps> = ({ id, className }) => {
       className={`flex items-center justify-center min-h-screen w-full bg-white text-black  ${className}`}
     >
       <form
-        className="flex flex-col items-center justify-center border-2 border-black p-20 gap-10"
+        className="flex flex-col items-center justify-center border-2 border-black p-20 gap-10 rounded-2xl"
         onSubmit={handleSubmit}
       >
+        <Header>Profile</Header>
         <div className="relative group flex items-center justify-center border-2 border-black rounded-full w-32 h-32 overflow-hidden">
           {avatar ? (
             <Image

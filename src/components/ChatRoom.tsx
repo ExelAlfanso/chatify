@@ -19,15 +19,13 @@ interface ChatRoomProps {
 }
 
 const ChatRoom: React.FC<ChatRoomProps> = ({ id, className }) => {
-  const { user, refreshUser } = useAuth();
+  const { user } = useAuth();
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<MessageData[]>([]);
   const [isConnected, setIsConnected] = useState(false);
   const [transport, setTransport] = useState("N/A");
   const bottomRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    refreshUser();
-
     const loadMessages = async () => {
       try {
         const res = await axiosInstance.get("/messages", {
@@ -39,7 +37,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ id, className }) => {
       }
     };
     loadMessages();
-  }, [id, refreshUser]);
+  }, [id]);
 
   useEffect(() => {
     const onUpgrade = (transport: { name: string }) => {

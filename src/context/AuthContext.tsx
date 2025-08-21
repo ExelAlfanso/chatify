@@ -43,7 +43,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const fetchUser = useCallback(async () => {
     try {
       const res = await axiosInstance.get("/me");
-      setUser(res.data);
+      setUser((prev) => {
+        const newUser = res.data;
+        if (JSON.stringify(prev) !== JSON.stringify(newUser)) {
+          return newUser;
+        }
+        return prev;
+      });
     } catch {
       setUser(null);
     } finally {
