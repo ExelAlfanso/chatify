@@ -3,14 +3,22 @@
 import Button from "@/components/Button";
 import Header from "@/components/Header";
 import InputField from "@/components/InputField";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
 
 export default function Signin() {
-  const { login } = useAuth();
+  const { user, refreshUser, login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const router = useRouter();
+  useEffect(() => {
+    refreshUser();
+    if (user) {
+      router.push("/");
+    }
+  }, [user, refreshUser, router]);
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     try {

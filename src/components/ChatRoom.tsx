@@ -9,6 +9,7 @@ import { useAuth } from "@/context/AuthContext";
 interface MessageData {
   senderUsername: string;
   content: string;
+  avatar: string;
 }
 
 interface ChatRoomProps {
@@ -18,13 +19,15 @@ interface ChatRoomProps {
 }
 
 const ChatRoom: React.FC<ChatRoomProps> = ({ id, className }) => {
-  const { user } = useAuth();
+  const { user, refreshUser } = useAuth();
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<MessageData[]>([]);
   const [isConnected, setIsConnected] = useState(false);
   const [transport, setTransport] = useState("N/A");
   const bottomRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
+    refreshUser();
+
     const loadMessages = async () => {
       try {
         const res = await axiosInstance.get("/messages", {
@@ -36,7 +39,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ id, className }) => {
       }
     };
     loadMessages();
-  }, [id]);
+  }, [id, refreshUser]);
 
   useEffect(() => {
     const onUpgrade = (transport: { name: string }) => {
@@ -84,6 +87,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ id, className }) => {
       roomID: id,
       senderUsername: user?.username,
       content: input,
+      avatar: user?.avatar,
     };
     socket.emit("message", messagePayload);
     setInput("");
@@ -91,7 +95,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ id, className }) => {
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  });
+  }, [messages]);
   return (
     <div id={id} className={`w-1/2 text-black ${className}`}>
       <h1 className="text-center text-6xl font-bold p-10">
@@ -104,8 +108,6 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ id, className }) => {
           .
         </span>
       </h1>
-      {/* <p>Status: {isConnected ? "connected" : "disconnected"}</p>
-      <p>Transport: {transport}</p> */}
       <div className="border p-4 h-64 overflow-y-scroll">
         {messages.map((msg, idx) => {
           return (

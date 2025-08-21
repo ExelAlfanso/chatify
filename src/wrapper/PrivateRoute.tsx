@@ -1,23 +1,24 @@
 "use client";
 
-import LoadingOverlay from "@/components/LoadingOverlay";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 
 interface PrivateRouteProps {
+  to?: string | undefined;
   children?: React.ReactNode;
 }
 
-const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
-  const { user, loading } = useAuth();
+const PrivateRoute: React.FC<PrivateRouteProps> = ({ to = "/", children }) => {
+  const { refreshUser, user, setLoading, loading } = useAuth();
   const router = useRouter();
   useEffect(() => {
+    refreshUser();
     if (!loading && !user) {
-      router.push("/login");
+      setLoading(false);
+      router.push(to);
     }
-  }, [user, loading, router]);
-  if (loading || !user) return <LoadingOverlay></LoadingOverlay>;
+  }, [user, refreshUser, setLoading, loading, to, router]);
   return children;
 };
 

@@ -30,6 +30,7 @@ interface AuthContextType {
   loading: boolean;
   logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
+  setLoading: Dispatch<SetStateAction<boolean>>;
 }
 export const AuthContext = createContext<AuthContextType | undefined>(
   undefined
@@ -104,6 +105,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         register,
         logout,
         loading,
+        setLoading,
         refreshUser: fetchUser,
       }}
     >

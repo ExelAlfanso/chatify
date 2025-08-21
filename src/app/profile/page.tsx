@@ -3,7 +3,7 @@ import PrivateRoute from "@/wrapper/PrivateRoute";
 
 export default function ProfilePage() {
   return (
-    <PrivateRoute>
+    <PrivateRoute to="/">
       <Profile></Profile>
     </PrivateRoute>
   );

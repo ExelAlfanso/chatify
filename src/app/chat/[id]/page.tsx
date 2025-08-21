@@ -1,4 +1,5 @@
 import ValidatedChatRoom from "@/components/ValidatedChatRoom";
+import PrivateRoute from "@/wrapper/PrivateRoute";
 import { notFound } from "next/navigation";
 import { use } from "react";
 
@@ -11,7 +12,9 @@ export default function ChatPage(props: ChatPageProps) {
   if (!id) notFound();
   return (
     <div className="min-h-screen bg-white flex items-center justify-center">
-      <ValidatedChatRoom id={id} />
+      <PrivateRoute to="/login">
+        <ValidatedChatRoom id={id} />
+      </PrivateRoute>
     </div>
   );
 }

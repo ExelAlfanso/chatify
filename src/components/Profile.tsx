@@ -73,10 +73,10 @@ const Profile: React.FC<ProfileProps> = ({ id, className }) => {
   return (
     <div
       id={id}
-      className={`flex items-center justify-center min-h-screen w-full bg-white text-black ${className}`}
+      className={`flex items-center justify-center min-h-screen w-full bg-white text-black  ${className}`}
     >
       <form
-        className="flex flex-col items-center justify-center"
+        className="flex flex-col items-center justify-center border-2 border-black p-20 gap-10"
         onSubmit={handleSubmit}
       >
         <div className="relative group flex items-center justify-center border-2 border-black rounded-full w-32 h-32 overflow-hidden">
@@ -103,18 +103,24 @@ const Profile: React.FC<ProfileProps> = ({ id, className }) => {
             />
           </label>
         </div>
-        <InputField
-          type={"text"}
-          placeholder={user?.username ?? ""}
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <InputField
-          type={"email"}
-          value={email}
-          placeholder={user?.email ?? ""}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+        <div className="flex flex-col">
+          <label className="font-primary mr-2">Name</label>
+          <InputField
+            type={"text"}
+            placeholder={user?.username ?? ""}
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+        </div>
+        <div className="flex flex-col">
+          <label className="font-primary mr-2">Email</label>
+          <InputField
+            type={"email"}
+            value={email}
+            placeholder={user?.email ?? ""}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
         <Button type={"submit"}>Save</Button>
       </form>
     </div>
