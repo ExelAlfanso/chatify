@@ -20,7 +20,9 @@ const Navbar: React.FC<NavbarProps> = ({ id, className, children }) => {
       id={id}
       className={`flex flex-row items-center justify-evenly w-full h-10 border border-black p-10 bg-white ${className}`}
     >
-      <p className="text-black font-bold ">Chatify</p>
+      <Link href="/">
+        <p className="text-black font-bold ">Chatify</p>
+      </Link>
       {NavBarDatas.map((item, idx) => (
         <Link
           href={item.href}

@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import Header from "./Header";
 import { MoveLeft } from "lucide-react";
 import Link from "next/link";
+import BackIcon from "./BackIcon";
 
 interface ProfileProps {
   id?: string;
@@ -82,9 +83,7 @@ const Profile: React.FC<ProfileProps> = ({ id, className }) => {
         className=" relative flex flex-col items-center justify-center border-2 border-black p-20 gap-10 rounded-2xl"
         onSubmit={handleSubmit}
       >
-        <Link href="/" className="absolute top-10 left-10 ">
-          <MoveLeft></MoveLeft>
-        </Link>
+        <BackIcon />
         <Header>Profile</Header>
         <div className="relative group flex items-center justify-center border-2 border-black rounded-full w-32 h-32 overflow-hidden">
           {avatar ? (

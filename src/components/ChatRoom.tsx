@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import Message from "@/components/Message";
 import { MoveLeft } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
+import BackIcon from "./BackIcon";
 interface MessageData {
   senderUsername: string;
   content: string;
@@ -103,11 +104,11 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ id, className }) => {
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-    // bottomRef.current?.scrollIntoView();
   }, [messages]);
   return (
     <div id={id} className={`w-1/2 text-black ${className}`}>
-      <h1 className="text-center text-6xl font-bold p-10">
+      <BackIcon />
+      <h1 className="text-center text-3xl lg:text-6xl font-bold p-10">
         {id} chat room{" "}
         <span
           className={`inline ${

@@ -13,7 +13,7 @@ const Hero: React.FC<HeroProps> = ({ id, className, children }) => {
       id={id}
       className={`flex flex-col items-center justify-center text-black my-32 bg-white ${className}`}
     >
-      <div className="w-200 text-7xl font-bold mb-10   ">
+      <div className="w-100 lg:w-200 text-4xl lg:text-7xl text-center font-bold mb-10  ">
         <h1 className="inline">The Platform </h1>
         <h1>to connect People</h1>
       </div>

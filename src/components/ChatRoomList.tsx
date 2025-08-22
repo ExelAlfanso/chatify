@@ -41,7 +41,7 @@ const ChatRoomList: React.FC<ChatRoomListProps> = ({
 
   return (
     <div id={id} className={`font-primary ${className}`}>
-      <table className="border border-black border-collapse">
+      <table className="border border-black border-collapse w-100 lg:w-200">
         <thead>
           <tr>
             <th>No</th>
@@ -53,7 +53,7 @@ const ChatRoomList: React.FC<ChatRoomListProps> = ({
           {rooms.map((room, idx) => (
             <tr
               key={idx}
-              className="cursor-pointer hover:bg-gray-50"
+              className="cursor-pointer hover:bg-gray-50 hover:font-semibold"
               onClick={() => {
                 router.push(
                   `${user === null ? `/login` : `/chat/${room.roomID}`}`
