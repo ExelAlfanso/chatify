@@ -10,6 +10,8 @@ interface MessageData {
   senderUsername: string;
   content: string;
   avatar: string;
+  roomID: string;
+  tempID?: string;
 }
 
 interface ChatRoomProps {
@@ -58,7 +60,12 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ id, className }) => {
 
     const onMessage = (msg: MessageData) => {
       console.log("Socket received message:", msg);
-      setMessages((prev) => [...prev, msg]);
+      setMessages((prev) => {
+        if (msg.tempID && prev.some((m) => m.tempID === msg.tempID)) {
+          return prev;
+        }
+        return [...prev, msg];
+      });
     };
     socket.onAny((event, ...args) => {
       console.log("Socket Event:", event, args);
@@ -81,18 +88,22 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ id, className }) => {
   }, [id]);
   const sendMessage = () => {
     if (!input.trim()) return;
-    const messagePayload = {
-      roomID: id,
-      senderUsername: user?.username,
+    const tempID = Date.now().toString();
+    const messagePayload: MessageData & { tempID?: string } = {
+      senderUsername: user?.username || "",
       content: input,
-      avatar: user?.avatar,
+      avatar: user?.avatar || "",
+      roomID: id,
+      tempID,
     };
+    setMessages((prev) => [...prev, messagePayload]);
     socket.emit("message", messagePayload);
     setInput("");
   };
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    // bottomRef.current?.scrollIntoView();
   }, [messages]);
   return (
     <div id={id} className={`w-1/2 text-black ${className}`}>

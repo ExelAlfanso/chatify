@@ -10,6 +10,8 @@ import { User, Camera } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Header from "./Header";
+import { MoveLeft } from "lucide-react";
+import Link from "next/link";
 
 interface ProfileProps {
   id?: string;
@@ -77,9 +79,12 @@ const Profile: React.FC<ProfileProps> = ({ id, className }) => {
       className={`flex items-center justify-center min-h-screen w-full bg-white text-black  ${className}`}
     >
       <form
-        className="flex flex-col items-center justify-center border-2 border-black p-20 gap-10 rounded-2xl"
+        className=" relative flex flex-col items-center justify-center border-2 border-black p-20 gap-10 rounded-2xl"
         onSubmit={handleSubmit}
       >
+        <Link href="/" className="absolute top-10 left-10 ">
+          <MoveLeft></MoveLeft>
+        </Link>
         <Header>Profile</Header>
         <div className="relative group flex items-center justify-center border-2 border-black rounded-full w-32 h-32 overflow-hidden">
           {avatar ? (

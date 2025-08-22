@@ -2,13 +2,13 @@
 
 import axiosInstance from "@/lib/axios";
 import React, { useEffect, useState } from "react";
-import Button from "./Button";
-import LinkButton from "./LinkButton";
 import { useAuth } from "@/context/AuthContext";
+import Link from "next/link";
 
 interface ChatRoom {
   roomID: string;
   name: string;
+  amount: number;
 }
 
 interface ChatRoomListProps {
@@ -28,6 +28,7 @@ const ChatRoomList: React.FC<ChatRoomListProps> = ({
     const fetchRooms = async () => {
       try {
         const res = await axiosInstance.get("/chatrooms");
+
         setRooms(res.data.rooms);
       } catch (err) {
         console.error("Failed to fetch chat rooms", err);
@@ -37,15 +38,31 @@ const ChatRoomList: React.FC<ChatRoomListProps> = ({
   }, []);
 
   return (
-    <div id={id} className={`grid grid-cols-3 ${className}`}>
-      {rooms.map((room, idx) => (
-        <LinkButton
-          href={`${user === null ? `/login` : `/chat/${room.roomID}`}`}
-          key={idx}
-        >
-          <Button type={"button"}>Enter {room.name} chat room</Button>
-        </LinkButton>
-      ))}
+    <div id={id} className={`font-primary ${className}`}>
+      <table className="border border-black border-collapse">
+        <thead>
+          <tr>
+            <th>No</th>
+            <th>Room Name</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rooms.map((room, idx) => (
+            <tr key={idx}>
+              <td className="p-5">{idx + 1}</td>
+              <td className="p-5">
+                <Link
+                  href={`${user === null ? `/login` : `/chat/${room.roomID}`}`}
+                  key={idx}
+                >
+                  {room.name} Chat Room
+                </Link>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
 
       {children}
     </div>
