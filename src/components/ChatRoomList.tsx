@@ -4,11 +4,12 @@ import axiosInstance from "@/lib/axios";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface ChatRoom {
   roomID: string;
   name: string;
-  amount: number;
+  count: number;
 }
 
 interface ChatRoomListProps {
@@ -24,6 +25,7 @@ const ChatRoomList: React.FC<ChatRoomListProps> = ({
 }) => {
   const { user } = useAuth();
   const [rooms, setRooms] = useState<ChatRoom[]>([]);
+  const router = useRouter();
   useEffect(() => {
     const fetchRooms = async () => {
       try {
@@ -49,16 +51,18 @@ const ChatRoomList: React.FC<ChatRoomListProps> = ({
         </thead>
         <tbody>
           {rooms.map((room, idx) => (
-            <tr key={idx}>
+            <tr
+              key={idx}
+              className="cursor-pointer hover:bg-gray-50"
+              onClick={() => {
+                router.push(
+                  `${user === null ? `/login` : `/chat/${room.roomID}`}`
+                );
+              }}
+            >
               <td className="p-5">{idx + 1}</td>
-              <td className="p-5">
-                <Link
-                  href={`${user === null ? `/login` : `/chat/${room.roomID}`}`}
-                  key={idx}
-                >
-                  {room.name} Chat Room
-                </Link>
-              </td>
+              <td className="p-5">{room.name} Chat Room</td>
+              <td className="p-5">{room.count}/50</td>
             </tr>
           ))}
         </tbody>
