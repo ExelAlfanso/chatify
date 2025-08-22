@@ -8,10 +8,7 @@ import axiosInstance from "@/lib/axios";
 import { useLoading } from "@/context/LoadingContext";
 import { User, Camera } from "lucide-react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import Header from "./Header";
-import { MoveLeft } from "lucide-react";
-import Link from "next/link";
 import BackIcon from "./BackIcon";
 
 interface ProfileProps {
@@ -20,13 +17,12 @@ interface ProfileProps {
 }
 
 const Profile: React.FC<ProfileProps> = ({ id, className }) => {
-  const { user, setUser, refreshUser } = useAuth();
+  const { user, setUser } = useAuth();
   const [userId, setUserId] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [avatar, setAvatar] = useState("");
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
-  const router = useRouter();
   const { showLoading, hideLoading } = useLoading();
 
   useEffect(() => {

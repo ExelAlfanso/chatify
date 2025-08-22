@@ -3,7 +3,6 @@
 import axiosInstance from "@/lib/axios";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 interface ChatRoom {
