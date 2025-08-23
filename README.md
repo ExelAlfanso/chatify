@@ -17,14 +17,6 @@ This project also implements **authentication with AuthContext**, ensuring only 
 
 ---
 
-## 🖼️ Demo Screenshots
-> _Add screenshots here once available_
-- Login page
-- Register page  
-- Chat room UI  
-- Profile page
----
-
 ## 🛠️ Tech Stack
 **Frontend:**
 - [Next.js 13+](https://nextjs.org/) (App Router, TypeScript, React)  
@@ -75,8 +67,8 @@ yarn dev
 - JWT stored in cookies (or localStorage if preferred)
 - PrivateRoute ensures only logged-in users can access chat pages
 - Redirects:
-  - /login → redirect to /dashboard if already logged in
-  - /dashboard → redirect to /login if not logged in
+  - /login → redirect to /home if already logged in
+  - /chat/[roomID] → redirect to /login if not logged in
 
 ## 📂 Project Structure
 ```bash
