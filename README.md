@@ -1,36 +1,90 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 💬 Chatify
 
-## Getting Started
+A simple real-time chat application built with **Next.js, Socket.IO, and TypeScript**.  
+Users can join chat rooms, send messages instantly, and see other participants in real-time.  
+This project also implements **authentication with AuthContext**, ensuring only logged-in users can access chat rooms.
 
-First, run the development server:
+---
 
+## ✨ Features
+- 🔐 **Authentication** (Login, Logout, Register) with AuthContext  
+- 💬 **Real-time messaging** powered by Socket.IO  
+- 🏠 **Multiple chat rooms** — users can join different rooms  
+- 👤 **User avatars** (with default avatar fallback)  
+- 📜 **Message history** loaded from backend via REST API  
+- 📡 **Connection status indicator** (green = connected, red = disconnected)  
+- 🛡️ **PrivateRoute** protection for authenticated pages  
+
+---
+
+## 🛠️ Tech Stack
+**Frontend:**
+- [Next.js 13+](https://nextjs.org/) (App Router, TypeScript, React)  
+- [Socket.IO Client](https://socket.io/) for real-time communication  
+- [Tailwind CSS](https://tailwindcss.com/) for styling  
+- [Lucide React](https://lucide.dev/) for icons  
+
+**Backend:**
+- [Node.js](https://nodejs.org/) / [Express](https://expressjs.com/)  
+- [Socket.IO Server](https://socket.io/)  
+- REST API for messages & authentication  
+- Database (MongoDB / PostgreSQL / etc. — depending on your setup)  
+
+---
+
+## 🚀 Getting Started
+
+## 1️⃣ Clone the repo
+```bash
+git clone https://github.com/your-username/chatify.git
+cd chatify
+```
+## 2️⃣ Install dependencies
+```bash
+npm install
+# or
+yarn install
+```
+## 3️⃣ Setup environment variables
+Create a .env.local file in the project root:
+
+```env
+
+NEXT_PUBLIC_API_URL=http://localhost:4000
+NEXT_PUBLIC_SOCKET_URL=http://localhost:4000
+```
+(Adjust depending on your backend setup.)
+
+## 4️⃣ Run the development server
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```
+## 🔑 Authentication Flow
+
+- Auth state managed with AuthContext (login, logout, register)
+- JWT stored in cookies (or localStorage if preferred)
+- PrivateRoute ensures only logged-in users can access chat pages
+- Redirects:
+  - /login → redirect to /home if already logged in
+  - /chat/[roomID] → redirect to /login if not logged in
+
+## 📂 Project Structure
+```bash
+/src
+ ├── app/               # Next.js app router pages
+ ├── components/        # Reusable UI components
+ │    ├── Message.tsx   # Chat message component
+ │    └── LoadingOverlay.tsx
+ ├── context/           # AuthContext for auth state
+ ├── lib/               # axios instance, socket setup
+ └── styles/            # Tailwind styles
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## ✅ To-Do / Future Improvements
+- ✅ Add user typing indicator
+- ✅ Show online user count per room
+- 🔄 Add message reactions (👍 ❤️ 😂)
+- 📷 Support image/file upload in chat
+- 📱 Improve responsive design for mobile
