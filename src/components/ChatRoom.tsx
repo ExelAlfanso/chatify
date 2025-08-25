@@ -1,5 +1,5 @@
 "use client";
-
+import Image from "next/image";
 import axiosInstance from "@/lib/axios";
 import socket from "@/lib/socket";
 import { useEffect, useRef, useState } from "react";
@@ -14,7 +14,10 @@ interface MessageData {
   roomID: string;
   tempID?: string;
 }
-
+interface OnlineUser {
+  username: string;
+  avatar?: string;
+}
 interface ChatRoomProps {
   id: string;
   className?: string;
@@ -24,6 +27,7 @@ interface ChatRoomProps {
 const ChatRoom: React.FC<ChatRoomProps> = ({ id, className }) => {
   const { user } = useAuth();
   const [input, setInput] = useState("");
+  const [onlineUsers, setOnlineUsers] = useState<OnlineUser[]>([]);
   const [messages, setMessages] = useState<MessageData[]>([]);
   const [isConnected, setIsConnected] = useState(false);
   const [transport, setTransport] = useState("N/A");
@@ -43,6 +47,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ id, className }) => {
   }, [id]);
 
   useEffect(() => {
+    if (!user) return;
     const onUpgrade = (transport: { name: string }) => {
       setTransport(transport.name);
     };
@@ -51,7 +56,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ id, className }) => {
       setIsConnected(true);
       setTransport(socket.io.engine.transport.name);
       socket.io.engine.on("upgrade", onUpgrade);
-      socket.emit("join-room", id);
+      socket.emit("join-room", { roomID: id, user });
     };
     const onDisconnect = () => {
       console.log("Disconnected from socket");
@@ -68,12 +73,19 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ id, className }) => {
         return [...prev, msg];
       });
     };
+
+    const onOnlineUsers = (users: OnlineUser[]) => {
+      console.log("Online users updated:", users);
+      setOnlineUsers(users);
+    };
+
     socket.onAny((event, ...args) => {
       console.log("Socket Event:", event, args);
     });
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
     socket.on("message", onMessage);
+    socket.on("online-users", onOnlineUsers);
 
     if (socket.connected) {
       onConnect();
@@ -83,10 +95,11 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ id, className }) => {
       socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);
       socket.off("message", onMessage);
+      socket.off("online-users", onOnlineUsers);
       socket.io.engine.off("upgrade", onUpgrade);
       socket.offAny();
     };
-  }, [id]);
+  }, [user, id]);
   const sendMessage = () => {
     if (!input.trim()) return;
     const tempID = Date.now().toString();
@@ -118,29 +131,52 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ id, className }) => {
           .
         </span>
       </h1>
-      <div className="border p-4 h-64 overflow-y-scroll">
-        {messages.map((msg, idx) => {
-          return (
-            <Message key={idx} username={msg.senderUsername}>
-              {msg.content}
-            </Message>
-          );
-        })}
-        <div ref={bottomRef} />
-      </div>
-      <div className="flex flex-row gap-1">
-        <input
-          className=" px-2 py-1 mt-2 w-full border border-black"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-        />
-        <button
-          className="mt-2 px-4 py-2 bg-white text-black cursor-pointer hover:bg-slate-50 font-semibold  border border-black"
-          onClick={sendMessage}
-        >
-          <MoveLeft></MoveLeft>
-        </button>
+      <div className="flex flex-row items-center justify-center gap-2   w-full">
+        <div className="mb-4 border p-2">
+          <h2 className="font-semibold mb-2">
+            Online Users ({onlineUsers.length})
+          </h2>
+          <ul className="space-y-2">
+            {onlineUsers.map((u, i) => (
+              <li key={i} className="flex items-center gap-2">
+                <Image
+                  src={u.avatar || "/default-avatar.png"}
+                  alt={u.username}
+                  width={24}
+                  height={24}
+                  className="rounded-full"
+                />
+                <span>{u.username}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <div className="border p-4 h-64 overflow-y-scroll">
+            {messages.map((msg, idx) => {
+              return (
+                <Message key={idx} username={msg.senderUsername}>
+                  {msg.content}
+                </Message>
+              );
+            })}
+            <div ref={bottomRef} />
+          </div>
+          <div className="flex flex-row gap-1">
+            <input
+              className=" px-2 py-1 mt-2 w-full border border-black"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+            />
+            <button
+              className="mt-2 px-4 py-2 bg-white text-black cursor-pointer hover:bg-slate-50 font-semibold  border border-black"
+              onClick={sendMessage}
+            >
+              <MoveLeft></MoveLeft>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
